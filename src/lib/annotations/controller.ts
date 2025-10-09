@@ -7,10 +7,6 @@ export interface ControllerMeta {
 
 export const CONTROLLERS: ControllerMeta[] = [];
 
-/**
- * Décorateur Controller
- * @param filePath Optionnel : chemin ou module pour référence
- */
 export function Controller(name?: string) {
   return function <T extends new (...args: any[]) => {}>(target: T) {
     const className = name || target.name || "UnknownController";
