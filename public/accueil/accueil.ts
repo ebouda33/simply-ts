@@ -1,9 +1,9 @@
-import { DataBinding } from "../../src/lib/data-binding";
-import { Controller } from "../../src/lib/annotations/controller";
-import { Template } from "../../src/lib/annotations/Template";
+import {DataBinding} from "../../src/lib/data-binding";
+import {Controller} from "../../src/lib/annotations/controller";
+import {Template} from "../../src/lib/annotations/Template";
 
-@Controller
-@Template({ html: "accueil.html", css: "accueil.css" })
+@Controller("AccueilController")
+@Template({ html: "/accueil/accueil.html", css: "/accueil/accueil.css" })
 export class AccueilController {
   private model1: string;
   private binding: DataBinding;

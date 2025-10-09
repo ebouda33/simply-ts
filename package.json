@@ -1,0 +1,28 @@
+{
+  "name": "testia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/index.ts",
+    "start-web": "ts-node src/dev-server.ts",
+    "build": "tsc && node src/copy-public.mjs",
+    "copy-public": "node src/copy-public.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "@types/ws": "^8.18.1",
+    "prettier": "3.6.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.10",
+    "reflect-metadata": "^0.2.2",
+    "ws": "^8.18.3"
+  }
+}
