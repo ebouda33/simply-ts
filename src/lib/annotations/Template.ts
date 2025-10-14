@@ -30,12 +30,18 @@ export const Template = (options: TemplateOptions = {}) => {
           .then((htmlContent) => {
             container.innerHTML = htmlContent;
 
+            if (typeof (this as any).init === "function") {
+              (this as any).init();
+            }
             // Si CSS défini → injecter
             if (css) {
-              const link = document.createElement("link");
-              link.rel = "stylesheet";
-              link.href = css;
-              document.head.appendChild(link);
+              fetch(css)
+                .then((res) => res.text())
+                .then((styleContent) => {
+                  const styleEl = document.createElement("style");
+                  styleEl.textContent = styleContent;
+                  document.head.appendChild(styleEl);
+                });
             }
           })
           .catch((err) =>
