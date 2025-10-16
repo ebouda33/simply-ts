@@ -1,10 +1,6 @@
 import { RouterPath } from "../../public/module.router";
 import { RenderIt } from "../renderIt";
-import {
-  BaseController,
-  ControllerClass,
-  getControllerName,
-} from "./annotations/controller";
+import { BaseController, ControllerClass, getControllerName } from "./annotations/controller";
 
 export class Router {
   private readonly app: HTMLElement | null;
@@ -13,24 +9,22 @@ export class Router {
     readonly renderer: RenderIt,
     appSelector?: string,
   ) {
-    this.app =
-      appSelector === undefined
-        ? document.querySelector("render")
-        : document.querySelector(appSelector);
+    this.app = appSelector
+      ? document.querySelector(appSelector)
+      : document.querySelector("render");
 
-    // écoute les événements "route-change" envoyés par AppNavigation
+    // Écoute les événements "route-change" envoyés par AppNavigation
     document.addEventListener("route-change", (e: Event) => {
       const customEvent = e as CustomEvent<{ href: string }>;
-      const { href } = customEvent.detail;
-      this.navigate(href);
+      this.navigate(customEvent.detail.href);
     });
 
-    // gère le bouton retour/avant du navigateur
+    // Gestion du bouton retour/avant du navigateur
     globalThis.addEventListener("popstate", () => {
       this.render(location.pathname);
     });
 
-    // au chargement, afficher la route courante
+    // Affiche la route courante au chargement
     this.render(location.pathname);
   }
 
@@ -42,33 +36,38 @@ export class Router {
   public render(path: string) {
     if (!this.app) return;
 
+    // Normalisation du path (supprime le slash final sauf pour la racine)
     const normalizedPath =
       path.endsWith("/") && path !== "/" ? path.slice(0, -1) : path;
 
-    // Recherche directe dans RouterPath
     const route = RouterPath.find((r) => r.path === normalizedPath);
-
-    if (route) {
-      const renderElement = document.getElementsByTagName("render");
-      let instance: ControllerClass | undefined =
-        this.renderer.controllers.find(
-          (cmp) =>
-            getControllerName(cmp) === getControllerName(route.component),
-        );
-      if (undefined === instance) {
-        console.warn(
-          `⚠️ Aucun controller instancié trouvé pour ${getControllerName(route.component)}`,
-        );
-      } else {
-        (instance as any).render(renderElement[0]);
-      }
-    } else {
+    if (!route) {
       this.app.innerHTML = "<h1>404 - Page non trouvée</h1>";
+      return;
     }
+
+    const renderElement = document.querySelector("render");
+    if (!renderElement) return;
+
+    // Recherche de l'instance correspondante
+    const instance = this.renderer.controllers.find(
+      (ctrl) => getControllerName(ctrl) === getControllerName(route.component),
+    );
+
+    if (!instance) {
+      console.warn(
+        `⚠️ Aucun controller instancié trouvé pour ${getControllerName(route.component)}`,
+      );
+      return;
+    }
+
+    // Appel de render() de l'instance
+    instance.render(renderElement);
   }
 }
 
-function createControllerInstance<T extends BaseController>(
+// Fonction utilitaire si jamais tu as besoin de créer dynamiquement une instance
+export function createControllerInstance<T extends BaseController>(
   Ctor: ControllerClass<T>,
 ): T {
   return new Ctor();
