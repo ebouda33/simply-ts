@@ -1,6 +1,6 @@
 import { RouterPath } from "../../public/module.router";
 import { RenderIt } from "../renderIt";
-import { BaseController, ControllerClass, getControllerName } from "./annotations/controller";
+import { getControllerName } from "./annotations/controller";
 
 export class Router {
   private readonly app: HTMLElement | null;
@@ -51,24 +51,20 @@ export class Router {
 
     // Recherche de l'instance correspondante
     const instance = this.renderer.controllers.find(
+      // @ts-ignore
       (ctrl) => getControllerName(ctrl) === getControllerName(route.component),
     );
 
     if (!instance) {
       console.warn(
+        // @ts-ignore
         `⚠️ Aucun controller instancié trouvé pour ${getControllerName(route.component)}`,
       );
       return;
     }
 
     // Appel de render() de l'instance
+    // @ts-ignore
     instance.render(renderElement);
   }
-}
-
-// Fonction utilitaire si jamais tu as besoin de créer dynamiquement une instance
-export function createControllerInstance<T extends BaseController>(
-  Ctor: ControllerClass<T>,
-): T {
-  return new Ctor();
 }
