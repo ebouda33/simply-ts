@@ -21,6 +21,11 @@ creer dans public les pages ts pour le code, html pour le template et css par ex
 * `package.json` : Dépendances et scripts du projet.
 * `tsconfig.json` : Configuration TypeScript.
 
+## ▶️ Démarrage
+
+npm start-web # pour propulser en local un mini serveur qui sert vos pages
+npm build pour construire bien entendu.
+
 ## ✅ Tests
 
 Les tests sont situés dans le dossier `tests/`. Utilisez [Jest](https://jestjs.io/) pour les exécuter :
@@ -33,4 +38,11 @@ npm run test # pas encore en place
 
 Ce projet est sous licence MIT. Consultez le fichier [LICENSE](LICENSE) pour plus de détails.
 
-Merci de me laisser un avis.
+## 📌 TODO
+
+* adapter le serveur pour qu il serve le dist pour valider le build en local
+* Revoir le binding
+* Exposer les methodes public sous brave ne fonctione pas
+* ....
+
+🙏 Merci de me laisser un avis.
