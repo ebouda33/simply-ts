@@ -22,5 +22,5 @@ globalThis.addEventListener("DOMContentLoaded", () => {
   const render = new RenderIt();
   render.rechercheController();
   let router: Router = new Router(render);
-  router.render("/");
+  router.render(location.pathname);
 });

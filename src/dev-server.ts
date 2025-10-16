@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import * as esbuild from "esbuild";
-import {WebSocketServer} from "ws";
+import { WebSocketServer } from "ws";
 import * as http from "node:http";
 import CodeAdder from "./lib/code-adder";
 
@@ -61,25 +61,34 @@ const compileTsToJs = async (filePath: string): Promise<string> => {
 
 const server = http.createServer(async (req, res) => {
   let filePath = req.url === "/" ? "/index.html" : req.url!;
-  const fullPath = path.join(__dirname, "../public", filePath);
+  let fullPath = path.join(__dirname, "../public", filePath);
 
   if (!fs.existsSync(fullPath)) {
-    // Check if the requested file is a TypeScript file in the src directory
-    const tsPath = path.join(
-      __dirname,
-      "../",
-      filePath.replace(/\.js$/, ".ts"),
-    );
-    const tsPathWithExt = tsPath + (path.extname(tsPath) ? "" : ".ts");
-    if (fs.existsSync(tsPathWithExt)) {
-      const jsCode = await compileTsToJs(tsPathWithExt);
-      res.writeHead(200, { "Content-Type": "application/javascript" });
-      return res.end(jsCode);
+    if (filePath.endsWith("/")) {
+      filePath = "/index.html";
+      fullPath = path.join(__dirname, "../public", filePath);
+    } else {
+      // Check if the requested file is a TypeScript file in the src directory
+      const tsPath = path.join(
+        __dirname,
+        "../",
+        filePath.replace(/\.js$/, ".ts"),
+      );
+      const tsPathWithExt = tsPath + (path.extname(tsPath) ? "" : ".ts");
+      if (fs.existsSync(tsPathWithExt)) {
+        const jsCode = await compileTsToJs(tsPathWithExt);
+        res.writeHead(200, { "Content-Type": "application/javascript" });
+        return res.end(jsCode);
+      }
+      res.writeHead(404);
+      return res.end("Not found");
     }
-    res.writeHead(404);
-    return res.end("Not found");
   }
   let code: string = "";
+  if (filePath.endsWith("/")) {
+    filePath = "/index.html";
+    fullPath = path.join(__dirname, "../public", filePath);
+  }
   try {
     code = fs.readFileSync(fullPath, "utf-8");
   } catch (error) {

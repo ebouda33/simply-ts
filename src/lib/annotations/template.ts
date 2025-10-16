@@ -35,7 +35,7 @@ export const Template: ClassDecoratorFactory<TemplateOptions> = (
               typeof fn === "function" &&
               !methodName.startsWith("_")
             ) {
-              (window as any)[methodName] = fn.bind(this);
+              (globalThis as any)[methodName] = fn.bind(this);
             }
           }
           proto = Object.getPrototypeOf(proto);
