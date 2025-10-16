@@ -40,7 +40,7 @@ export class Navigation extends HTMLElement {
       </nav>
     `;
 
-    this.shadow.querySelectorAll("a").forEach((link) => {
+    for (const link of this.shadow.querySelectorAll("a")) {
       link.addEventListener("click", (event) => {
         event.preventDefault(); // stoppe la navigation classique
 
@@ -61,7 +61,7 @@ export class Navigation extends HTMLElement {
           }),
         );
       });
-    });
+    }
   }
 }
 

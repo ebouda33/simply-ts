@@ -26,7 +26,7 @@ export const Template: ClassDecoratorFactory<TemplateOptions> = (
       private _bindControllerMethods() {
         let proto = Object.getPrototypeOf(this);
         while (proto && proto !== Object.prototype) {
-          Object.getOwnPropertyNames(proto).forEach((methodName) => {
+          for (const methodName of Object.getOwnPropertyNames(proto)) {
             const fn = (this as any)[methodName];
             if (
               methodName !== "constructor" &&
@@ -37,7 +37,7 @@ export const Template: ClassDecoratorFactory<TemplateOptions> = (
             ) {
               (window as any)[methodName] = fn.bind(this);
             }
-          });
+          }
           proto = Object.getPrototypeOf(proto);
         }
 

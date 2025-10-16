@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import * as esbuild from "esbuild";
-import { WebSocketServer } from "ws";
+import {WebSocketServer} from "ws";
 import * as http from "node:http";
 import CodeAdder from "./lib/code-adder";
 
@@ -14,11 +14,11 @@ wss.on("connection", (ws) => {
 });
 
 const broadcastReload = () => {
-  wss.clients.forEach((client) => {
+  for (const client of wss.clients) {
     if (client.readyState === 1) {
       client.send("reload");
     }
-  });
+  }
 };
 
 // Watch files in public and src folders

@@ -23,7 +23,4 @@ globalThis.addEventListener("DOMContentLoaded", () => {
   render.rechercheController();
   let router: Router = new Router(render);
   router.render("/");
-  // const renderElement = document.getElementsByTagName("render");
-  // console.log("Render démarré");
-  // render.controllers[0].render(renderElement[0]);
 });
