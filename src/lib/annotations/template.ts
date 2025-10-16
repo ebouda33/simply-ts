@@ -1,14 +1,17 @@
-// src/shared/decorator/Template.ts
+// src/shared/decorator/template.ts
+import { ClassDecoratorFactory } from "./class-decorator-factory";
+
 interface TemplateOptions {
   html?: string;
   css?: string;
 }
 
-export const Template = (options: TemplateOptions = {}) => {
+export const Template: ClassDecoratorFactory<TemplateOptions> = (
+  options: TemplateOptions = {},
+) => {
   const { html, css } = options;
 
   return function <T extends new (...args: any[]) => {}>(constructor: T) {
-    // Ajout de propriétés statiques pour introspection éventuelle
     (constructor as any).template = html || null;
     (constructor as any).style = css || null;
 
@@ -16,13 +19,34 @@ export const Template = (options: TemplateOptions = {}) => {
     if (html) console.log(`HTML : ${html}`);
     if (css) console.log(`CSS  : ${css}`);
 
-    // On retourne une version étendue de la classe
     return class extends constructor {
       template = html || null;
       style = css || null;
 
+      private _bindControllerMethods() {
+        let proto = Object.getPrototypeOf(this);
+        while (proto && proto !== Object.prototype) {
+          Object.getOwnPropertyNames(proto).forEach((methodName) => {
+            const fn = (this as any)[methodName];
+            if (
+              methodName !== "constructor" &&
+              methodName !== "render" &&
+              methodName !== "init" &&
+              typeof fn === "function" &&
+              !methodName.startsWith("_")
+            ) {
+              (window as any)[methodName] = fn.bind(this);
+            }
+          });
+          proto = Object.getPrototypeOf(proto);
+        }
+
+        if (typeof (this as any).init === "function") {
+          (this as any).init();
+        }
+      }
+
       render(container: HTMLElement) {
-        // Si pas de HTML défini → rien à faire
         if (!html) return;
 
         fetch(html)
@@ -30,10 +54,8 @@ export const Template = (options: TemplateOptions = {}) => {
           .then((htmlContent) => {
             container.innerHTML = htmlContent;
 
-            if (typeof (this as any).init === "function") {
-              (this as any).init();
-            }
-            // Si CSS défini → injecter
+            this._bindControllerMethods();
+
             if (css) {
               fetch(css)
                 .then((res) => res.text())

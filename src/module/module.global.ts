@@ -1,6 +1,6 @@
 // src/module/module.global.ts
 import "../../public/module";
-import {CONTROLLERS} from "../lib/annotations/controller";
+import { CONTROLLERS } from "../lib/annotations/controller";
 
 /**
  * Retourne tous les controllers enregistrés
@@ -8,3 +8,8 @@ import {CONTROLLERS} from "../lib/annotations/controller";
 export function loadControllers() {
   return CONTROLLERS;
 }
+
+export type ModelRouterPath = {
+  path: string;
+  component: Function;
+};

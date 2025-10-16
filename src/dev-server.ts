@@ -79,8 +79,14 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(404);
     return res.end("Not found");
   }
-
-  let code = fs.readFileSync(fullPath, "utf-8");
+  let code: string = "";
+  try {
+    code = fs.readFileSync(fullPath, "utf-8");
+  } catch (error) {
+    console.error(error);
+    res.writeHead(404);
+    return res.end("Not found");
+  }
   let contentType = "text/plain";
 
   if (filePath.endsWith(".html")) {
@@ -111,8 +117,8 @@ function extractFileNameWithoutExtension(filePath: string): string {
   // Utiliser path.extname pour obtenir l'extension du fichier
   const extName = path.extname(baseName);
   // Extraire le nom du fichier sans l'extension
-  const fileNameWithoutExtension = baseName.slice(0, -extName.length);
-  return fileNameWithoutExtension;
+
+  return baseName.slice(0, -extName.length);
 }
 
 server.listen(PORT, () => {

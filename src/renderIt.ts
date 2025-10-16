@@ -1,7 +1,9 @@
 import { loadControllers } from "./module/module.global";
+import { Router } from "./lib/router";
+import { ControllerClass } from "./lib/annotations/controller";
 
 export class RenderIt {
-  controllers: any[] = [];
+  controllers: ControllerClass[] = [];
 
   rechercheController() {
     const registry = loadControllers();
@@ -16,10 +18,12 @@ export class RenderIt {
 }
 
 // Initialisation
-window.addEventListener("DOMContentLoaded", () => {
+globalThis.addEventListener("DOMContentLoaded", () => {
   const render = new RenderIt();
-  const renderElement = document.getElementsByTagName("render");
-  console.log("Render démarré");
   render.rechercheController();
-  render.controllers[0].render(renderElement[0]);
+  let router: Router = new Router(render);
+  router.render("/");
+  // const renderElement = document.getElementsByTagName("render");
+  // console.log("Render démarré");
+  // render.controllers[0].render(renderElement[0]);
 });
