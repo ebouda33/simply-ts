@@ -72,7 +72,7 @@ const serveFile = async (reqUrl: string, res: http.ServerResponse) => {
 
   // Normaliser / → /index.html
   if (filePath.endsWith("/")) {
-    filePath += "index.html";
+    filePath = "/index.html";
     fullPath = path.join(PUBLIC_DIR, filePath);
   }
 

@@ -9,9 +9,7 @@ pour le moment non propulser clone projet
 
 ## 🛠️ Utilisation
 
-```
 creer dans public les pages ts pour le code, html pour le template et css par exemple
-```
 
 ## 📂 Structure du projet
 
@@ -23,16 +21,21 @@ creer dans public les pages ts pour le code, html pour le template et css par ex
 
 ## ▶️ Démarrage
 
+````bash
 npm start-web # pour propulser en local un mini serveur qui sert vos pages
-npm build pour construire bien entendu.
+````
+
+````bash
+npm build pour # construire bien entendu.
+````
 
 ## ✅ Tests
 
 Les tests sont situés dans le dossier `tests/`. Utilisez [Jest](https://jestjs.io/) pour les exécuter :
 
-```bash
+````bash
 npm run test # pas encore en place
-```
+````
 
 ## 📄 Licence
 
