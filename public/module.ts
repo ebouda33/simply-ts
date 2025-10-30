@@ -1,2 +1,2 @@
-import "./accueil/accueil";
-import "./page1/page1";
+// import "./accueil/accueil";
+// import "./page1/page1";

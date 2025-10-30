@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import * as esbuild from "esbuild";
 import * as http from "node:http";
-import {WebSocketServer} from "ws";
+import { WebSocketServer } from "ws";
 import CodeAdder from "./lib/code-adder";
 
 const PORT = 3000;
@@ -87,8 +87,7 @@ const serveFile = async (reqUrl: string, res: http.ServerResponse) => {
       return res.end(jsCode);
     }
 
-    res.writeHead(404);
-    return res.end("Not found");
+    return retourALaRacine(res);
   }
 
   // Lecture du fichier
@@ -124,6 +123,23 @@ const serveFile = async (reqUrl: string, res: http.ServerResponse) => {
   res.end(code);
 };
 
+function retourALaRacine(res: http.ServerResponse) {
+  const filePath = "/index.html";
+  const fullPath = path.join(PUBLIC_DIR, filePath);
+
+  const contentType = "text/html";
+  let code = fs.readFileSync(fullPath, "utf-8");
+  code = code.replace(
+    "</body>",
+    `<script>
+        const ws = new WebSocket('ws://localhost:${WS_PORT}');
+        ws.onmessage = () => location.reload();
+      </script></body>`,
+  );
+
+  res.writeHead(200, { "Content-Type": contentType });
+  res.end(code);
+}
 // ----------------------
 // HTTP Server
 // ----------------------

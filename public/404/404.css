@@ -1,0 +1,48 @@
+
+svg {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    animation: rotateAndFloat 6s ease-in-out infinite,
+    glow 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.6));
+}
+
+@keyframes rotateAndFloat {
+    0% {
+        transform: rotate(0deg) translateY(15px);
+    }
+    50% {
+        transform: rotate(180deg) translateY(30px);
+    }
+    100% {
+        transform: rotate(360deg) translateY(-15px);
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(248, 113, 113, 0.4));
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(248, 113, 113, 0.8));
+    }
+}

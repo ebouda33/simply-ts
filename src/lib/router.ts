@@ -4,11 +4,17 @@ import { getControllerName } from "./annotations/controller";
 
 export class Router {
   private readonly app: HTMLElement | null;
+  private readonly CATCH_ALL = "**";
+  private readonly notFoundControllerRoute;
 
   constructor(
     readonly renderer: RenderIt,
     appSelector?: string,
   ) {
+    this.notFoundControllerRoute = RouterPath.find(
+      (r) => r.path === this.CATCH_ALL,
+    );
+
     this.app = appSelector
       ? document.querySelector(appSelector)
       : document.querySelector("render");
@@ -40,8 +46,10 @@ export class Router {
     const normalizedPath =
       path.endsWith("/") && path !== "/" ? path.slice(0, -1) : path;
 
-    const route = RouterPath.find((r) => r.path === normalizedPath);
-    if (!route) {
+    let route = RouterPath.find((r) => r.path === normalizedPath);
+    if (this.notFoundControllerRoute) {
+      route ??= this.notFoundControllerRoute;
+    } else {
       this.app.innerHTML = "<h1>404 - Page non trouvée</h1>";
       return;
     }
@@ -65,6 +73,12 @@ export class Router {
 
     // Appel de render() de l'instance
     // @ts-ignore
-    instance.render(renderElement);
+    if (typeof instance.render === "function") {
+      // @ts-ignore
+      instance.render(renderElement);
+    } else {
+      // @ts-ignore
+      console.error(`No Template for  ${instance.__className}`);
+    }
   }
 }
