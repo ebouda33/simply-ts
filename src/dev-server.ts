@@ -96,8 +96,7 @@ const serveFile = async (reqUrl: string, res: http.ServerResponse) => {
     code = fs.readFileSync(fullPath, "utf-8");
   } catch (err) {
     console.error(err);
-    res.writeHead(404);
-    return res.end("Not found");
+    return retourALaRacine(res);
   }
 
   // Déterminer le type de contenu et injection HMR
