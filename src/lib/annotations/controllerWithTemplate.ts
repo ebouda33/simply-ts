@@ -15,7 +15,7 @@ export function ControllerWithTemplate(
   return function (target: any) {
     // ⚠️ Template doit être appliqué en premier
     // Controller appliqué ensuite
-    Template({ html: html, css: css })(target);
+    target = Template({ html: html, css: css })(target);
     Controller(path)(target);
   };
 }

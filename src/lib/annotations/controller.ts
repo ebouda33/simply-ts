@@ -1,6 +1,7 @@
 // src/lib/annotations/controller.ts
 import { ClassDecoratorFactory } from "./class-decorator-factory";
 
+const unknownController: any = "UnknownController";
 export interface ControllerMarker {
   __controllerBrand: true; // un "brand type" invisible à l'exécution
 }
@@ -25,7 +26,8 @@ export function getControllerName(c: ControllerClass | BaseController): string {
   return (
     (c as any).__className ??
     (c as BaseController).__className ??
-    "UnknownController"
+    (c as any).name ??
+    unknownController
   );
 }
 
@@ -34,13 +36,14 @@ export const CONTROLLERS: ControllerMeta[] = [];
 export const Controller: ClassDecoratorFactory<string> =
   (name?: string) =>
   <T extends new (...args: any[]) => {}>(target: T) => {
-    const className = name || target.name || "UnknownController";
+    const className = name || target.name || unknownController;
     // Ajout d'une propriété prototype pour nom
-    Object.defineProperty(target, "__className", {
+    const p_className: PropertyKey = "__className";
+    Object.defineProperty(target, p_className, {
       value: className,
       writable: false,
     });
-    Object.defineProperty(target.prototype, "__className", {
+    Object.defineProperty(target.prototype, p_className, {
       value: className,
       writable: false,
     });
@@ -60,11 +63,11 @@ export const Controller: ClassDecoratorFactory<string> =
     }
 
     // ✅ On colle aussi la meta sur le wrapper (static et prototype)
-    Object.defineProperty(ControllerWrapper, "__className", {
+    Object.defineProperty(ControllerWrapper, p_className, {
       value: className,
       writable: false,
     });
-    Object.defineProperty(ControllerWrapper.prototype, "__className", {
+    Object.defineProperty(ControllerWrapper.prototype, p_className, {
       value: className,
       writable: false,
     });
